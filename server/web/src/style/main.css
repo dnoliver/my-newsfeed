@@ -1,0 +1,23 @@
+[data-action] {
+  cursor: pointer;
+}
+
+[data-view-type=Comment] [data-model=content] {
+  margin-left: 1em;
+}
+
+[data-view-type=Comment] [data-selector=info] {
+  margin-left: 1em;
+}
+
+[data-view-type=Comment] [data-selector=actions] {
+  margin-left: 1em;
+}
+
+[data-view-type=CommentCollection] [data-selector=uploader] {
+  margin-bottom: 1em;
+}
+
+a[role=tab] {
+  cursor: pointer;
+}

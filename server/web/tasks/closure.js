@@ -11,7 +11,7 @@ module.exports = function (grunt, options) {
       ]
     },
     all: {
-      dest: 'src/deps.js'
+      dest: 'deps.js'
     }
   };
   

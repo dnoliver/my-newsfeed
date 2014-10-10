@@ -1,0 +1,247 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/mediaelement/build/mediaelementplayer.min.css">
+    <link rel="stylesheet" href="src/style/main.css">
+    
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/underscore/underscore-min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/backbone/backbone.js"></script>
+    <script src="bower_components/mediaelement/build/mediaelement-and-player.min.js"></script>
+
+    <script src="node_modules/closure-library/closure/goog/base.js"></script>
+    <script src="deps.js"></script>
+    <script src="bootstrap.js"></script>
+  </head>
+  <body>
+    
+    <script id="CommentCollectionTemplate" type="text/template">
+      <ul data-selector="list"></ul>
+      <div class="form-group" data-selector="form" style="display:none">
+        <form action="http://127.0.0.1:3000/upload" method="post" data-selector="fileform">
+          <input type="file" name="file" data-selector="uploader"></input>
+        </form>
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Comment" data-selector="input"></input>
+          <a class="input-group-addon" data-action="send">Send</a>
+        </div>
+      </div>
+      <div data-selector="actions">
+        <a data-action="comment">Comment</a>
+        <a data-action="toggle" data-selector="toggle">Hide</a>
+      </div>
+    </script>
+    
+    <script id="NewsFeedTemplate" type="text/template">
+      <h1>
+        <span class="glyphicon glyphicon-book"></span> 
+        <span data-model="title"></span>
+      </h1>
+    </script>
+    
+    <script id="NewsFeedItemTemplate" type="text/template">
+      <span data-model="title"></span>
+    </script>
+    
+    <script id="CommentTemplate" type="text/template">
+      <div><span data-model="user"></span> say:</div>
+      <div><em data-model="content"></em></div>
+      <div data-selector="info"> 
+        <span data-model="likes"></span> likes
+      </div>
+      <div data-selector="actions">
+        <a data-action="like">Like</a>
+        <a data-action="share">Share</a>
+      </div>
+    </script>
+    
+    <script id="UserItemTemplate" type="text/template">
+      <h4>
+        <span class="label label-success">
+          <span data-model="name"></span>
+        </span>
+      </h4>
+    </script>
+    
+    <script id="ModalShareTemplate" type="text/template">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Share</h4>
+          </div>
+          <div class="modal-body">
+            <div class="btn-group btn-group-justified">
+              <a class="btn btn-primary btn-group-lg">
+                <h4>Share in Facebook</h4>
+              </a>
+              <a class="btn btn-info btn-group-lg">
+                <h4>Share in Tweeter</h4>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+    
+    <script id="ModalLoginTemplate" type="text/template">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Login</h4>
+          </div>
+          <div class="modal-body">
+            <form role="form">
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-addon">User</div>
+                  <input type="text" class="form-control" placeholder="User" data-selector="user">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-addon">Pass</div>
+                  <input type="password" class="form-control" placeholder="Password" data-selector="password">
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-action="login">Login</button>
+          </div>
+        </div>
+      </div>
+    </script>
+    
+    <script id="NavbarTemplate" type="text/template">
+      <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#_navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Universidad Blas Pascal</a>
+          </div>
+          <div class="collapse navbar-collapse" id="_navbar">
+            <ul class="nav navbar-nav">
+              <li><a data-action="logout">Logout</a></li>
+              <li><a data-action="createNewsfeed">Create Newsfeed</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </script>
+    
+    <script id="TabsTemplate" type="text/template">
+      <ul class="nav nav-tabs" role="tablist" data-selector="tabs"></ul>
+      <div class="tab-content" data-selector="panels"></div>
+    </script>
+    
+    <div class="container-fluid">
+      <div id="navbar"></div>
+      <div class="row">
+        <div class="col-md-8">
+          <h1>My Newsfeeds</h1>
+          <div id="tabs"></div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="row">
+            <h1>
+              <span class="glyphicon glyphicon-user"></span> Users
+            </h1>
+            <h4>List</h4>
+            <div id="usercollection"></div>
+          </div>
+          <div class="row">
+            <h1>
+              <span class="glyphicon glyphicon-list"></span> Newsfeeds
+            </h1>
+            <h4>List</h4>
+            <div id="newsfeedcollection"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="login"></div>
+    <div id="share"></div>
+    
+    <script>
+    $(document).ready(function(){
+      
+      DB = app.DataBase.getInstance();
+      
+      Observers = {
+        Event: new app.Observer.Event()
+      };
+      
+      UiRegions = {
+        login: $("#login"),
+        share: $("#share"),
+        users: $("#usercollection"),
+        newsfeeds: $("#newsfeedcollection"),
+        navbar: $("#navbar"),
+        tabs: $("#tabs")
+      };
+      
+      Widgets = {
+        Share: app.Widget.Share.getInstance(),
+        Login: app.Widget.Login.getInstance(),
+        Navbar: app.Widget.Navbar.getInstance(),
+        Tabs: app.Widget.Tabs.getInstance()
+      };
+      
+      app.View.Observers.push(Observers.Event);
+      
+      Views = {};
+      Views.UserCollection = app.View.Create('Collection');
+      Views.NewsfeedCollection = app.View.Create('Collection');
+      
+      UiRegions.navbar.append(Widgets.Navbar.render().$el);
+      UiRegions.login.append(Widgets.Login.render().$el);
+      UiRegions.share.append(Widgets.Share.render().$el);
+      UiRegions.tabs.append(Widgets.Tabs.render().$el);
+      UiRegions.users.append(Views.UserCollection.render().$el);
+      UiRegions.newsfeeds.append(Views.NewsfeedCollection.render().$el);
+      
+      Widgets.Login.modal('show');
+      
+      Users = app.Collection.Create('Users');
+      Users.fetch();
+      
+      Comments = app.Collection.Create('Comments');
+      Comments.fetch();
+      
+      Newsfeeds = app.Collection.Create('Newsfeeds');
+      Newsfeeds.fetch();
+      
+      DB.get('Users').on('add',function(user){
+        console.log(user);
+        Views.UserCollection.add(app.View.Create('UserItem',{model:user}));
+      });
+      
+      DB.get('Newsfeeds').on('add',function(model){
+        Views.NewsfeedCollection.add(app.View.Create('NewsfeedItem',{model:model}));
+        Widgets.Tabs.add({
+          title: model.get('title'),
+          view: app.View.Create('Newsfeed',{model:model}),
+          id: model.id
+        });
+      });
+
+      DB.get('Comments').on('add',function(model,collection,options){
+        app.View.Instances.CommentCollection[model.get('parent')].add(app.View.Create('Comment',{model:model}));
+      });
+    });
+    </script>
+  </body>
+</html>

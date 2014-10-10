@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/web/src/view/widget.js</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/dao/TempDAO.java</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/web/src/view/view.js</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/helpers/ModelBuilder.java</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/servlets/UserServlet.java</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/servlets/NewsfeedServlet.java</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/dao/DataAccessObject.java</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/web/src/event/event.js</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/servlets/CommentServlet.java</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/web/index.html</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/helpers/JsonBuilder.java</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/servlets/SessionServlet.java</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/web/src/collection/collection.js</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/web/bootstrap.js</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/web/src/db/database.js</file>
+            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/web/src/model/model.js</file>
+        </group>
+    </open-files>
+</project-private>
