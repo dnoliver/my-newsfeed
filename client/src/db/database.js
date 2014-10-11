@@ -9,7 +9,7 @@ app.DataBase = function DataBase(){
   };
   
   //this.fetchInterval = 5000;
-  //this.fetch();
+  this.fetch();
 };
 
 app.DataBase.prototype.get = function (schema){

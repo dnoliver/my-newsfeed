@@ -13,6 +13,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import routers.CommentRouter;
+import routers.NewsfeedRouter;
 import routers.Router;
 import routers.RouterRegistry;
 import routers.SessionRouter;
@@ -30,6 +32,8 @@ public class RouterServlet extends HttpServlet {
         RouterRegistry.getInstance().addRouter(new Router());
         RouterRegistry.getInstance().addRouter(new SessionRouter());
         RouterRegistry.getInstance().addRouter(new UserRouter());
+        RouterRegistry.getInstance().addRouter(new NewsfeedRouter());
+        RouterRegistry.getInstance().addRouter(new CommentRouter());
     }
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
