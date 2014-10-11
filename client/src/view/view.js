@@ -271,7 +271,9 @@ app.View.CommentCollection = app.View.Model.extend({
     app.View.Model.prototype.render.apply(this);
     var self = this;
     
-    app.DataBase.getInstance().get('Comments').forEach(function(model){
+    app.DataBase.getInstance().get('Comments')
+    .where({parent:self.model.id})
+    .forEach(function(model){
       self.add(app.View.Create('Comment',{model:model}));
     });
     
@@ -318,6 +320,7 @@ app.View.Newsfeed = app.View.Model.extend({
   render: function(){
     var self = this;
     app.View.Model.prototype.render.apply(this);
+    
     var c = app.View.Create('CommentCollection',{model:self.model});
     this.$el.append(c.render().$el);
     return this;
@@ -397,8 +400,13 @@ app.View.Comment = app.View.Model.extend({
     $content.append(commentTokens.join(' '));
     $content.find("video").mediaelementplayer();
     
-    var c = app.View.Create('CommentCollection',{model:self.model});
-    this.$el.append(c.render().$el);
+    var parent = this.model.get("parent");
+    
+    var parentModel = app.DataBase.getInstance().get("Newsfeeds").findWhere({id:parent});
+    if(parentModel){
+        var c = app.View.Create('CommentCollection',{model:self.model});
+        this.$el.append(c.render().$el);
+    }
     
     return this;
   }

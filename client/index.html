@@ -216,7 +216,6 @@
       Widgets.Login.modal('show');
       
       DB.get('Users').on('add',function(user){
-        console.log(user);
         Views.UserCollection.add(app.View.Create('UserItem',{model:user}));
       });
       
@@ -228,9 +227,12 @@
           id: model.id
         });
       });
-
+      
       DB.get('Comments').on('add',function(model,collection,options){
-        app.View.Instances.CommentCollection[model.get('parent')].add(app.View.Create('Comment',{model:model}));
+        var parentView = app.View.Instances.CommentCollection[model.get('parent')];
+        if(parentView !== undefined){
+            parentView.add(app.View.Create('Comment',{model:model}));
+        }
       });
     });
     </script>

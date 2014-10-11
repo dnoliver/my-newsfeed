@@ -36,7 +36,6 @@ public class RouterRegistry {
     }
     
     public void handle(HttpServletRequest request, HttpServletResponse response){
-        System.out.println("RouterRegistry:handle()");
         for(Router router : routers){
             router.handle(request, response);
         }
