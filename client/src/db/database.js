@@ -8,8 +8,8 @@ app.DataBase = function DataBase(){
     Comments: app.Collection.Create('Comments')
   };
   
-  this.fetchInterval = 5000;
-  this.fetch();
+  //this.fetchInterval = 5000;
+  //this.fetch();
 };
 
 app.DataBase.prototype.get = function (schema){

@@ -96,17 +96,17 @@
             <h4 class="modal-title">Login</h4>
           </div>
           <div class="modal-body">
-            <form role="form">
+            <form role="form" data-selector="form">
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-addon">User</div>
-                  <input type="text" class="form-control" placeholder="User" data-selector="user">
+                  <input type="text" name="user" class="form-control" placeholder="User" data-selector="user">
                 </div>
               </div>
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-addon">Pass</div>
-                  <input type="password" class="form-control" placeholder="Password" data-selector="password">
+                  <input type="password" name="password" class="form-control" placeholder="Password" data-selector="password">
                 </div>
               </div>
             </form>
@@ -214,15 +214,6 @@
       UiRegions.newsfeeds.append(Views.NewsfeedCollection.render().$el);
       
       Widgets.Login.modal('show');
-      
-      Users = app.Collection.Create('Users');
-      Users.fetch();
-      
-      Comments = app.Collection.Create('Comments');
-      Comments.fetch();
-      
-      Newsfeeds = app.Collection.Create('Newsfeeds');
-      Newsfeeds.fetch();
       
       DB.get('Users').on('add',function(user){
         console.log(user);

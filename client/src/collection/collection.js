@@ -6,17 +6,17 @@ app.Collection.Create = function Create(Class,x){
 };
 
 app.Collection.Users = Backbone.Collection.extend({
-    url: '/server/users',
+    url: '/ubp/router/model/user',
     model: app.Model.User
 });
 
 app.Collection.Newsfeeds = Backbone.Collection.extend({
-    url: '/server/newsfeeds',
+    url: '/ubp/router/model/newsfeed',
     model: app.Model.Newsfeed
 });
 
 app.Collection.Comments = Backbone.Collection.extend({
-    url: '/server/comments',
+    url: '/ubp/router/model/comment',
     model: app.Model.Comment
 });
 

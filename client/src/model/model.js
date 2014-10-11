@@ -32,7 +32,7 @@ app.Model._newsfeed = _.defaults({
 
 app.Model.Newsfeed = app.Model.Base.extend({
   defaults: app.Model._newsfeed,
-  urlRoot: '/server/newsfeeds',
+  urlRoot: '/ubp/router/model/newsfeed',
   
   initialize: function(){
     app.Model.Base.prototype.initialize.apply(this);
@@ -51,7 +51,7 @@ app.Model._comment = _.defaults({
 
 app.Model.Comment = app.Model.Base.extend({
   defaults: app.Model._comment,
-  urlRoot: '/server/comments',
+  urlRoot: '/ubp/router/model/comment',
   
   initialize: function(){
     app.Model.Base.prototype.initialize.apply(this);
@@ -74,7 +74,7 @@ app.Model._user = _.defaults({
 
 app.Model.User = app.Model.Base.extend({
   defaults: app.Model._user,
-  urlRoot: '/server/users'
+  urlRoot: '/ubp/router/model/user'
 });
 
 app.Model._session = _.defaults({
@@ -87,7 +87,7 @@ app.Model._session = _.defaults({
 
 app.Model.Session = app.Model.Base.extend({
   defaults: app.Model._session,
-  urlRoot: '/server/sessions'
+  urlRoot: '/ubp/router/session'
 });
 
 goog.addSingletonGetter(app.Model.Session);

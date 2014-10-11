@@ -30,7 +30,8 @@ app.Widget.Login = app.Widget.Modal.extend({
     app.Widget.Modal.prototype.initialize.apply(this);
     this.selectors = {
       user: null,
-      password: null
+      password: null,
+      form: null
     };
     
     this.listenTo(app.Model.Session.getInstance(),'change:valid',function(model,isValid){
@@ -40,17 +41,15 @@ app.Widget.Login = app.Widget.Modal.extend({
   
   actions: {
     login: function(target){
-      var session = app.Model.Session.getInstance();
-      
-      session.set({
+      var data = {
         user: target.selectors.user.val(),
         password: target.selectors.password.val(),
-        date: new Date(),
         valid: true
-      });
+      };
       
-      target.selectors.user.val('');
-      target.selectors.password.val('');
+      app.Model.Session.getInstance().save(data);
+      //target.selectors.user.val('');
+      //target.selectors.password.val('');
     }
   }
 });

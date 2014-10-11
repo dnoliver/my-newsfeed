@@ -6,54 +6,50 @@
 
 package servlets;
 
-import dao.TempDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
-import javax.json.Json;
-import javax.json.JsonWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import routers.Router;
+import routers.RouterRegistry;
+import routers.SessionRouter;
+import routers.UserRouter;
 
 /**
  *
  * @author dnoliver
  */
-@WebServlet(name = "SessionServlet", urlPatterns = {"/sessions"})
-public class SessionServlet extends HttpServlet {
+@WebServlet(name = "RouterServlet", urlPatterns = {"/router/*"})
+public class RouterServlet extends HttpServlet {
 
-    TempDAO dao;
-    StringWriter writer;
-    JsonWriter jsonWriter;
-    
     @Override
-    public void init() throws ServletException {
-        super.init(); //To change body of generated methods, choose Tools | Templates.
-        dao = new TempDAO();
-        writer = new StringWriter();
-        jsonWriter = Json.createWriter(writer);
-        jsonWriter.writeArray(dao.get("sessions"));
-        jsonWriter.close();
+    public void init(){
+        RouterRegistry.getInstance().addRouter(new Router());
+        RouterRegistry.getInstance().addRouter(new SessionRouter());
+        RouterRegistry.getInstance().addRouter(new UserRouter());
     }
     
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        RouterRegistry.getInstance().handle(request, response);
+        /*
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            out.println(writer.toString());
+        try (PrintWriter out = response.getWriter()) {         
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet RouterServlet</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet RouterServlet at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
+        */
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -85,6 +81,12 @@ public class SessionServlet extends HttpServlet {
         processRequest(request, response);
     }
 
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+    
     /**
      * Returns a short description of the servlet.
      *

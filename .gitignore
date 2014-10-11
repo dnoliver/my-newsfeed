@@ -3,3 +3,4 @@ node_modules/
 src/deps.js
 /server/nbproject/private/
 /server/build/
+/server/dist/
