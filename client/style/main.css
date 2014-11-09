@@ -1,0 +1,15 @@
+[data-action] {
+  cursor: pointer;
+}
+
+a[role=tab] {
+  cursor: pointer;
+}
+
+.facebook-share {
+  margin-bottom: 10px;
+}
+
+.facebook-share>span {
+  font-size: 15px;
+}

@@ -7,7 +7,8 @@ app.Builder.Create = function Create(Class,x){
 app.Builder.Creators = {
   link: _.template('<a href="<%= content %>"><%= content %></a>'),
   image: _.template('<img src="<%= content %>" alt="not available" class="img-rounded img-responsive">'),
-  video: _.template('<video preload="none"><source type="video/youtube" src="<%= content %>" /></video>')
+  video: _.template('<video preload="none"><source type="video/youtube" src="<%= content %>" /></video>'),
+  youtube: _.template('<embed width="420" height="315" src="<%= content %>">')
 };
 
 app.Builder.Patterns = {
@@ -21,7 +22,8 @@ app.Builder.Base = function BaseBuilder(){
 };
 
 app.Builder.Base.prototype.build = function(content){
-  return _.map(content.split(' '),this.buildPart);
+  var tokens = _.map(content.split(' '),this.buildPart);
+  return tokens.filter(function(token){ return token; });
 };
 
 app.Builder.Base.prototype.buildPart = function(part){
