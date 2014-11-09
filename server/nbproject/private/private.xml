@@ -3,22 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/servlets/RouterServlet.java</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/dao/TempDAO.java</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/routers/RouterRegistry.java</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/client/src/collection/collection.js</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/helpers/ModelBuilder.java</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/routers/Router.java</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/client/index.html</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/dao/DataAccessObject.java</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/routers/UserRouter.java</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/routers/NewsfeedRouter.java</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/routers/SessionRouter.java</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/helpers/JsonBuilder.java</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/client/src/view/view.js</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/client/src/db/database.js</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/client/src/model/model.js</file>
-            <file>file:/home/dnoliver/Repositories/my-newsfeed/server/src/java/routers/CommentRouter.java</file>
+            <file>file:/C:/Users/dnoliver/Documents/GitHub/my-newsfeed/client/templates/Newsfeed.jsp</file>
+            <file>file:/C:/Users/dnoliver/Documents/GitHub/my-newsfeed/client/templates/PostForm.jsp</file>
+            <file>file:/C:/Users/dnoliver/Documents/GitHub/my-newsfeed/client/src/view.js</file>
+            <file>file:/C:/Users/dnoliver/Documents/GitHub/my-newsfeed/client/templates/Post.jsp</file>
         </group>
     </open-files>
 </project-private>

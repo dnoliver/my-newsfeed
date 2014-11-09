@@ -4,3 +4,6 @@ src/deps.js
 /server/nbproject/private/
 /server/build/
 /server/dist/
+/database/nbproject/private/
+/database/build/
+/client/storage
