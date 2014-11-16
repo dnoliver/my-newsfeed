@@ -6,15 +6,17 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import db.DataBaseAction;
+import models.Session;
+import models.User;
 import javax.servlet.http.Cookie;
+import models.ModelFactory;
+import models.ModelType;
 /**
  *
  * @author dnoliver
@@ -33,17 +35,23 @@ public class LoginServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
-    String user = request.getParameter("user");
-    String password = request.getParameter("password");
-
-    DataBaseAction db = new DataBaseAction();
-
-    if(db.login(user, password)){
-      HttpSession session = request.getSession(true);
-      Cookie cookie = new Cookie("session", session.getId());
+    String userName = request.getParameter("user");
+    String userPassword = request.getParameter("password");
+    User user = (User) ModelFactory.Create(ModelType.USER);
+    
+    user.set("id", userName);
+    user.set("password", userPassword);
+    
+    if(user.login()){
+      HttpSession httpSession = request.getSession(true);
+      Session session = (Session) ModelFactory.Create(ModelType.SESSION);
+      Cookie cookie = new Cookie("session", httpSession.getId());
+      
+      session.set("id", httpSession.getId());
+      session.set("owner",userName);
+      session.save();
       cookie.setPath("/");
       response.addCookie(cookie);
-      db.createSession(session.getId(), user);
       response.sendRedirect("/ubp/Main.jsp");
     }
     else {
@@ -59,5 +67,5 @@ public class LoginServlet extends HttpServlet {
   @Override
   public String getServletInfo() {
       return "Login Servlet";
-  }// </editor-fold>
+  }
 }

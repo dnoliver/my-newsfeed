@@ -5,10 +5,15 @@
  */
 package servlets;
 
-import db.ObjectDataBase;
+import db.DataBase;
+import db.QueryParameter;
 import helpers.PathParser;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Types;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -16,6 +21,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.simple.JSONValue;
 
 /**
  *
@@ -36,17 +42,23 @@ public class CollectionServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
     PathParser path;
-    ObjectDataBase db;
-    String res;
+    DataBase db;
 
-    db = new ObjectDataBase();
+    db = new DataBase();
     path = new PathParser(request.getPathInfo());
 
-    try (PrintWriter out = response.getWriter()) {
+    String query = "select * from ?";
+    List<QueryParameter> params = new LinkedList();
+    
+    params.add(QueryParameter.Create(path.resource(), Types.VARCHAR, 1));
+    List<Map<String, Object>> results = db.executeQuery(query, params);
+    
+    try {
+      PrintWriter out = response.getWriter();
       response.setContentType("application/json;charset=UTF-8");
       response.setStatus(200);
-      res = db.get(path.resource()).toString();
-      out.print(res);
+      out.print(JSONValue.toJSONString(results));
+      out.close();
     }
     catch (IOException ex) {
       Logger.getLogger(CollectionServlet.class.getName()).log(Level.SEVERE, null, ex);

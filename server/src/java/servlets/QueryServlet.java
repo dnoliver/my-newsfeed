@@ -5,7 +5,7 @@
  */
 package servlets;
 
-import db.ObjectDataBase;
+import db.DataBaseQuery;
 import helpers.QueryParser;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,22 +24,25 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "QueryServlet", urlPatterns = {"/query/*"})
 public class QueryServlet extends HttpServlet {
 
-
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
     QueryParser query;
-    ObjectDataBase db;
-    String res;
+    DataBaseQuery dbquery;
     
-    db = new ObjectDataBase();
+    dbquery = new DataBaseQuery();
     query = new QueryParser(request.getPathInfo());
     
-    try (PrintWriter out = response.getWriter()) {   
-      res = db.query(query.resource(), query.filter(), query.value()).toString();
+    dbquery.set("table", query.resource());
+    dbquery.set("filter", query.filter());
+    dbquery.set("value", query.value());
+    
+    try {   
+      PrintWriter out = response.getWriter();
+      dbquery.execute();
       response.setContentType("application/json;charset=UTF-8");
       response.setStatus(200);
-      out.print(res);
+      out.print(dbquery.toJSONString());
       out.close();
     } catch (IOException ex) {
       Logger.getLogger(QueryServlet.class.getName()).log(Level.SEVERE, null, ex);
@@ -55,5 +58,4 @@ public class QueryServlet extends HttpServlet {
   public String getServletInfo() {
     return "Query Servlet";
   }
-
 }

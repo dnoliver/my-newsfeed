@@ -5,9 +5,8 @@
  */
 package servlets;
 
-import db.DataBaseAction;
 import java.io.IOException;
-import java.io.PrintWriter;
+import models.Session;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -15,6 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.ModelFactory;
+import models.ModelType;
 
 /**
  *
@@ -33,12 +34,14 @@ public class LogoutServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
-    HttpSession session = request.getSession(false);
+    HttpSession httpSession = request.getSession(false);
 
-    if(session != null){
-      DataBaseAction db = new DataBaseAction();
-      db.removeSession(session.getId());
-      session.invalidate();
+    if(httpSession != null){
+      Session session = (Session) ModelFactory.Create(ModelType.SESSION);
+      session.set("id", httpSession.getId());
+      session.delete();
+      
+      httpSession.invalidate();
       
       Cookie[] cookies = request.getCookies();
       if(cookies != null){
@@ -54,7 +57,6 @@ public class LogoutServlet extends HttpServlet {
       response.sendRedirect("/ubp/Login.jsp");
     }
     else {
-      /** TODO: handle else */
       response.sendRedirect("/ubp/Login.jsp");
     }
   }
