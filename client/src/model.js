@@ -8,11 +8,11 @@ app.Model.Create = function(Class,x){
 app.Model.Base = Backbone.Model.extend({});
 
 app.Model.Newsfeed = app.Model.Base.extend({
-  urlRoot: app.Config.MODEL_URL + '/newsfeeds'
+  urlRoot: app.Config.MODEL.NEWSFEED
 });
 
 app.Model.Post = app.Model.Base.extend({
-  urlRoot: app.Config.MODEL_URL + '/posts',
+  urlRoot: app.Config.MODEL.POST,
   validate: function(attributes,options){
     if(attributes.text.length <= 0){
       return "text cannot be empty";
@@ -25,11 +25,11 @@ app.Model.Post = app.Model.Base.extend({
 });
 
 app.Model.Like = app.Model.Base.extend({
-  urlRoot: app.Config.MODEL_URL + '/likes'
+  urlRoot: app.Config.MODEL.LIKE
 });
 
 app.Model.Comment = app.Model.Base.extend({
-  urlRoot: app.Config.MODEL_URL + '/comments',
+  urlRoot: app.Config.MODEL.COMMENT,
   validate: function(attributes,options){
     if(attributes.text.length >= 140){
       return "text cannot be grater than 140";
@@ -41,5 +41,5 @@ app.Model.Comment = app.Model.Base.extend({
 });
 
 app.Model.User = app.Model.Base.extend({
-  urlRoot: app.Config.MODEL_URL + '/users'
+  urlRoot: app.Config.MODEL.USER
 });

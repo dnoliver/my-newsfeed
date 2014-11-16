@@ -49,10 +49,10 @@ app.View.Template = app.View.Base.extend({
   handleEvent: function(event){
     var action = event.target.dataset.action;
     if(this.actions[action]){
-      this.actions[action].apply(this,[event]);  
+      this.actions[action].apply(this,[event]);
     }
     else {
-      throw new Error('Cannot handle ' + action);
+      throw new Error('Cannot handle action: ' + action);
     }
     event.stopPropagation();
   },
@@ -60,20 +60,15 @@ app.View.Template = app.View.Base.extend({
   initialize: function(){
     app.View.Base.prototype.initialize.apply(this);
     this.selectors = {};
-    this.compile(this.selector);
+    this.template = _.template($(this.selector).html());
   },
   
   attachSelectors: function(){
     var elements = this.$el.find('[data-selector]');
-    
     for(var i = 0; i < elements.length; i++){
       var selector = elements[i].dataset.selector;
       this.selectors[selector] = this.$(elements[i]); 
     }
-  },
-  
-  compile: function(selector){
-    this.template = _.template($(selector).html());
   },
   
   render: function(){
@@ -104,12 +99,9 @@ app.View.Model = app.View.Template.extend({
     this.properties = {};
   },
   
-  attachSelectors: function(){
-    app.View.Template.prototype.attachSelectors.apply(this);
-    
+  attachProperties: function(){
     for(var key in this.model.toJSON()){
       var $selector = this.$('[data-model='+ key +']');
-      
       if($selector.length > 0){
         this.properties[key] = $selector;
       }
@@ -121,14 +113,14 @@ app.View.Model = app.View.Template.extend({
       this.properties[property].html(this.model.get(property));
     }
     for(var updater in this.updaters){
-      this.updaters[updater](this);
+      this.updaters[updater].apply(this,[this]);
     }
   },
   
   update: function(model,val,options){
     for(var changed in model.changed){
       if(this.updaters[changed]){
-        this.updaters[changed](this);    
+        this.updaters[changed].apply(this,[this]);
       }
       if(this.properties[changed]){
         this.properties[changed].html(this.model.get(changed));
@@ -138,37 +130,9 @@ app.View.Model = app.View.Template.extend({
   
   render: function(){
     app.View.Template.prototype.render.apply(this);
+    this.attachProperties();
     this.updateView();
     return this;
-  }
-});
-
-/*
- * Collection View
- */
-app.View.Collection = app.View.Base.extend({
-  tagName: 'ul',
-  
-  initialize: function(){
-    app.View.Base.prototype.initialize.apply(this);
-    this.childs = [];
-  },   
-                                           
-  render: function(){
-    app.View.Base.prototype.render.apply(this);
-    return this;
-  },
-  
-  add: function(view){
-    this.$el.append(view.render().$el);
-    this.childs.push(view);
-  },
-  
-  remove: function(){
-    for(var child in this.childs){
-      this.childs[child].remove();
-    }
-    app.View.Base.prototype.remove.apply(this);
   }
 });
 
@@ -228,11 +192,6 @@ app.View.PostForm = app.View.Template.extend({
   
   setPostData: function(postdata){
     this.postdata = postdata;
-  },
-  
-  render: function(){
-    app.View.Template.prototype.render.apply(this);
-    return this;
   }
 });
 
@@ -246,20 +205,18 @@ app.View.Newsfeed = app.View.Model.extend({
   
   attributes: function(){
     var attrs = app.View.Model.prototype.attributes.apply(this);
-    attrs.class = 'panel';
     return attrs;
   },
   
   updaters: {
     enabled: function(target){
-      if(target.model.get('enabled') === true){
-        target.$el.attr('class','panel panel-primary');
-        target.selectors.form.show();
+      if(this.model.get('enabled') === true){
+        this.selectors.form.show();
       }
       else {
-        target.$el.attr('class','panel panel-danger');
-        target.selectors.form.hide();
+        this.selectors.form.hide();
       }
+      this.collection.fetch();
     }
   },
   
@@ -287,7 +244,10 @@ app.View.Newsfeed = app.View.Model.extend({
     this.collection.setup('posts','newsfeed',this.model.id);
     
     this.collection.on('add',function(post){
-      this.selectors.posts.prepend(app.View.Create('Post',{model:post}).render().$el);
+      var $child = app.View.Create('Post',{model:post}).render().$el;
+      $child.hide();
+      this.selectors.posts.prepend($child);
+      $child.fadeIn(2000);
     },this);
     
     this.collection.once('sync',function(){
@@ -331,12 +291,12 @@ app.View.Comment = app.View.Model.extend({
   
   updaters: {
     enabled: function(target){
-      var isEnabled = target.model.get('enabled') === true;
+      var isEnabled = this.model.get('enabled') === true;
       if(isEnabled){
-        target.$el.attr('class','panel panel-default');
+        this.$el.attr('class','panel panel-default');
       }
       else {
-        target.$el.attr('class','panel panel-danger');
+        this.$el.attr('class','panel panel-danger');
       }
     }
   },
@@ -353,31 +313,17 @@ app.View.Comment = app.View.Model.extend({
       app.Application.Controller.getInstance().showControls({model:target.model,delete:true});
     },
     attachment: function(event){
-      var target = this;
-      window.open(target.model.get('attachment'));
+      window.open(this.model.get('attachment'));
     }
   },
 
   render: function(){
     app.View.Model.prototype.render.apply(this);
     
-    var $content = this.selectors.text;
-    var $media = this.selectors.media;
-    
     var content = this.model.get('text');
     var commentTokens = this.builders.comment.build(content);
-    var imageTokens = this.builders.image.build(content);
-    var videoTokens = this.builders.video.build(content);
     
-    if(videoTokens.length > 0){
-      $media.append(_.first(videoTokens));
-      $media.find("video").mediaelementplayer();
-    }
-    else if(imageTokens.length > 0){
-      $media.append(_.first(imageTokens));
-    }
-    
-    $content.append(commentTokens.join(' '));
+    this.selectors.text.append(commentTokens.join(' '));
     
     if(app.Application.Model.getInstance().get('category') === 'professor'){
       this.selectors.controls.show();
@@ -400,16 +346,16 @@ app.View.Post = app.View.Comment.extend({
   
   updaters: {
     enabled: function(target){
-      var isEnabled = target.model.get('enabled') === true;
+      var isEnabled = this.model.get('enabled') === true;
       if(isEnabled){
-        target.$el.attr('class','panel panel-info');
-        target.selectors.form.show();
-        target.selectors.actions.show();
+        this.$el.attr('class','panel panel-info');
+        this.selectors.form.show();
+        this.selectors.actions.show();
       }
       else {
-        target.$el.attr('class','panel panel-danger');
-        target.selectors.form.hide();
-        target.selectors.actions.hide();
+        this.$el.attr('class','panel panel-danger');
+        this.selectors.form.hide();
+        this.selectors.actions.hide();
       }
     }
   },
@@ -433,7 +379,10 @@ app.View.Post = app.View.Comment.extend({
     this.collection.setup('comments','post',this.model.id);
     
     this.collection.on('add',function(comment){
-      this.selectors.comments.append(app.View.Create('Comment',{model:comment}).render().$el);
+      var $child = app.View.Create('Comment',{model:comment}).render().$el;
+      $child.hide();
+      this.selectors.comments.append($child);
+      $child.fadeIn(2000);
     },this);
     
     this.collection.once('sync',function(){
@@ -454,12 +403,10 @@ app.View.Post = app.View.Comment.extend({
       app.Application.Controller.getInstance().showControls({model:target.model,delete:true});
     },
     share: function(event){
-      var target = this;
-      app.Application.Controller.getInstance().showShareWidget(target.model);
+      app.Application.Controller.getInstance().showShareWidget(this.model);
     },
     attachment: function(event){
-      var target = this;
-      window.open(target.model.get('attachment'));
+      window.open(this.model.get('attachment'));
     },
     like: function(event){
       var target = this;
@@ -471,6 +418,7 @@ app.View.Post = app.View.Comment.extend({
       Like.save(data,{
         success:function(){
           target.likes.fetch();
+          target.model.fetch();
           target.selectors.like.hide();
         },
         error:function(){
@@ -482,45 +430,21 @@ app.View.Post = app.View.Comment.extend({
 
   render: function(){
     app.View.Comment.prototype.render.apply(this);
+    var content = this.model.get('text');
+    var imageTokens = this.builders.image.build(content);
+    var videoTokens = this.builders.video.build(content);
+    
+    if(videoTokens.length > 0){
+      this.selectors.media.append(_.first(videoTokens));
+      this.selectors.media.attr('class','embed-responsive embed-responsive-4by3');
+    }
+    else if(imageTokens.length > 0){
+      this.selectors.media.append(_.first(imageTokens));
+    }
     this.selectors.form.append(this.form.render().$el);
+    this.form.selectors.form.hide();
     this.collection.fetch();
     this.likes.fetch();
     return this;
-  }
-});
-
-/*
- * User Item View
- */
-app.View.UserItem = app.View.Model.extend({
-  selector: '#UserItemTemplate',
-  type: 'UserItem',
-  tagName: 'li',
-  
-  initialize: function(){
-    app.View.Model.prototype.initialize.call(this);
-    this.selectors = {
-      status: null
-    };
-  },
-  
-  setConnected: function(){
-    this.selectors.status.attr('class','label label-success');
-  },
-  
-  setDisconnected: function(){
-    this.selectors.status.attr('class','label label-default');
-  },
-  
-  updaters: {
-    status: function(target){
-      var isConnected = target.model.get('status') === 'connected';
-      if(isConnected){ 
-        target.setConnected();
-      }
-      else { 
-        target.setDisconnected(); 
-      }
-    }
   }
 });

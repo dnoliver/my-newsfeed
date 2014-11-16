@@ -8,7 +8,7 @@ app.Application.Model = Backbone.Model.extend({});
 goog.addSingletonGetter(app.Application.Model);
 
 app.Application.Session = Backbone.Model.extend({
-  urlRoot: app.Config.MODEL_URL + '/sessions',
+  urlRoot: app.Config.MODEL.SESSION,
   initialize: function(){
     var str = document.cookie.split('; ');
     var result = {};
@@ -21,58 +21,43 @@ app.Application.Session = Backbone.Model.extend({
 });
 goog.addSingletonGetter(app.Application.Session);
 
-app.Application.Controller = app.View.Model.extend({
+app.Application.Controller = app.View.Template.extend({
   selector: '#ApplicationTemplate',
   type: 'Application',
   tagName: 'section',
   
-  attributes: function(){
-    return {
-      'data-view-type': self.type
-    };
-  },
-  
   actions: {
-    update: function(target){
-      target.trigger('UpdateTrigger');
+    update: function(event){
+      this.trigger('UpdateTrigger');
     }
   },
   
   initialize: function(){
+    app.View.Template.prototype.initialize.call(this);
+    
     this.model = app.Application.Model.getInstance();
     this.session = app.Application.Session.getInstance();
     this.user = app.Model.Create('User');
             
-    app.View.Model.prototype.initialize.call(this);
-    
     this.Widgets = {
-      Share: app.Widget.Share.getInstance(),
-      Controls: app.Widget.Controls.getInstance(),
-      Tabs: app.Widget.Tabs.getInstance(),
-      Users: app.View.Create('Collection')
+      Share: new app.Widget.Share(),
+      Controls: new app.Widget.Controls(),
+      Tabs: new app.Widget.Tabs()
     };
     
     this.Newsfeeds = app.Collection.Create('NewsfeedsQuery');
-    this.Users = app.Collection.Create('UsersQuery');
+    this.CommentsFeed = app.Collection.Create('Query');
   },
   
   render: function(){
-    app.View.Model.prototype.render.apply(this);
+    app.View.Template.prototype.render.apply(this);
     
     this.selectors.ShareWidgetUiRegion.append(this.Widgets.Share.render().$el);
     this.selectors.ControlsWidgetUiRegion.append(this.Widgets.Controls.render().$el);
-    this.selectors.UsersUiRegion.append(this.Widgets.Users.render().$el);
     
     this.listenToOnce(this.session,'sync',function(){
       this.user.set('id',this.session.get('owner'));
       this.user.fetch();
-      
-      this.Users.setup('users','session',this.session.id);
-      this.Users.fetch();
-    });
-    
-    this.listenToOnce(this.Users,'sync',function(){
-      this.Users.setAutoUpdate(true);
     });
     
     this.listenToOnce(this.user,'sync',function(){
@@ -82,18 +67,30 @@ app.Application.Controller = app.View.Model.extend({
       
       this.Newsfeeds.setup('newsfeeds','session',this.session.id);
       this.Newsfeeds.fetch();
+      
+      this.CommentsFeed.setup('comments','feed',this.session.id);
+      this.CommentsFeed.fetch();
     });
     
     this.listenToOnce(this.Newsfeeds,'sync',function(){
       this.Newsfeeds.setAutoUpdate(true);
+      this.CommentsFeed.setAutoUpdate(true);
       this.Widgets.Tabs.collection = this.Newsfeeds;
       this.selectors.TabUiRegion.append(this.Widgets.Tabs.render().$el);
       this.startFetching();
     });
-  
-    this.Users.on('add',function(user){
-      this.Widgets.Users.add(app.View.Create('UserItem',{model:user}));
-    },this);
+    
+    this.listenTo(this.CommentsFeed,'sync',function(){
+      this.selectors.FeedUiRegion.empty();
+      var feeds = this.CommentsFeed.toJSON();
+      for(var i in feeds){
+        var feed = feeds[i];
+        var $feed = $('<p class="feed">' + feed.owner + '> ' + feed.text + '</p>');
+        $feed.hide();
+        this.selectors.FeedUiRegion.append($feed);
+        $feed.fadeIn(2000);
+      }
+    });
 
     this.session.fetch();
  

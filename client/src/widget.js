@@ -52,8 +52,6 @@ app.Widget.Controls = app.Widget.Modal.extend({
   }
 });
 
-goog.addSingletonGetter(app.Widget.Controls);
-
 app.Widget.Share = app.Widget.Modal.extend({
   selector: "#ModalShareTemplate",
   
@@ -90,8 +88,6 @@ app.Widget.Share = app.Widget.Modal.extend({
   }
 });
 
-goog.addSingletonGetter(app.Widget.Share);
-
 app.Widget.Tabs = app.View.Template.extend({
   selector: '#TabsTemplate',
   
@@ -105,7 +101,7 @@ app.Widget.Tabs = app.View.Template.extend({
         '><%= title %></a>' +
        '</li>'),
     panel: _.template('<div class="tab-pane" id="<%= target %>" data-child="<%= child %>"></div>'),
-    menuItem: _.template('<li role="presentation"><a role="menuitem" tabindex="-1" data-action="changeCareer" data-target="<%= target %>"><%= target %></a></li>')
+    menuItem: _.template('<a class="list-group-item" data-action="changeCareer" data-target="<%= target %>"><%= target %></a>')
   },
   
   initialize: function(){
@@ -115,14 +111,12 @@ app.Widget.Tabs = app.View.Template.extend({
   actions: {
     changeNewsfeed: function(event){
       $(event.target).tab('show');
-      var newsfeed = $(event.target).attr('data-child');
-      app.Application.Model.getInstance().set('newsfeed',newsfeed);
     },
     changeCareer: function(event){
       var career = $(event.target).attr('data-target');
-      this.selectors.career.html(career);
+      this.selectors.menu.find('a.active').removeClass('active');
+      $(event.target).addClass('active');
       this.filter(career);
-      app.Application.Model.getInstance().set('career',career);
     }
   },
   
@@ -175,5 +169,3 @@ app.Widget.Tabs = app.View.Template.extend({
     return this;
   }
 });
-
-goog.addSingletonGetter(app.Widget.Tabs);

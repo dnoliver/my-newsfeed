@@ -7,19 +7,17 @@ app.Builder.Create = function Create(Class,x){
 app.Builder.Creators = {
   link: _.template('<a href="<%= content %>"><%= content %></a>'),
   image: _.template('<img src="<%= content %>" alt="not available" class="img-rounded img-responsive">'),
-  video: _.template('<video preload="none"><source type="video/youtube" src="<%= content %>" /></video>'),
-  youtube: _.template('<embed width="420" height="315" src="<%= content %>">')
+  youtube: _.template('<iframe src="http://www.youtube.com/embed/<%= content %>?html5=1" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'),
+  vimeo: _.template('<iframe src="//player.vimeo.com/video/<%= content %>" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>')
 };
 
 app.Builder.Patterns = {
   link: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
   image: /\.(jpeg|jpg|gif|png)$/,
-  video: /^(?:https?:\/\/)?(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=)?([\w-]{10,})/
+  video: /^https?:\/\/(?:.*?)\.?(youtube|vimeo)\.com\/(watch\?[^#]*v=(\w+)|(\d+)).*$/
 };
 
-app.Builder.Base = function BaseBuilder(){
-  
-};
+app.Builder.Base = function BaseBuilder(){};
 
 app.Builder.Base.prototype.build = function(content){
   var tokens = _.map(content.split(' '),this.buildPart);
@@ -68,6 +66,16 @@ goog.inherits(app.Builder.Video,app.Builder.Base);
 
 app.Builder.Video.prototype.buildPart = function(part){
   if(app.Builder.Patterns.video.test(part)){
-    return app.Builder.Creators.video({content:part});
+    var matches = part.match(app.Builder.Patterns.video);
+    var provider = matches[1];
+    var id = provider === 'vimeo' ? matches[2] : matches[3];
+    
+    if(provider === 'youtube'){
+      return app.Builder.Creators.youtube({content:id});
+    }
+    
+    if(provider === 'vimeo'){
+      return app.Builder.Creators.vimeo({content:id});
+    }
   }
 };
