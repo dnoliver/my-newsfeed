@@ -6,7 +6,6 @@ delete from subjects
 delete from careers
 delete from persons
 
-delete from sessions
 delete from comments
 delete from likes
 delete from posts
