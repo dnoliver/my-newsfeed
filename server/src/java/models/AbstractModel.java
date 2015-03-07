@@ -22,4 +22,5 @@ public interface AbstractModel extends JSONAware {
   public void update();
   public void save();
   public void delete();
+  public boolean execute(String action);
 }

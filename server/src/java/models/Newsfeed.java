@@ -9,6 +9,7 @@ import db.QueryParameter;
 import java.sql.Types;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -28,7 +29,7 @@ public class Newsfeed extends Model {
     params.add(QueryParameter.Create(this.get("id"), Types.INTEGER, 1));
     this.set(this.db.executeQuery(query, params));
   }
-
+  
   @Override
   public void update() {
     String query = "update newsfeeds set enabled = ? where id = ?";
@@ -40,22 +41,17 @@ public class Newsfeed extends Model {
   }
 
   @Override
+  public boolean execute(String action) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
   public void save() {
-    String query = "insert into newsfeeds(career,subject,owner) values(?,?,?,?)";
-    List<QueryParameter> params = new LinkedList();
-    
-    params.add(QueryParameter.Create(this.get("career"), Types.VARCHAR, 1));
-    params.add(QueryParameter.Create(this.get("subject"), Types.VARCHAR, 2));
-    params.add(QueryParameter.Create(this.get("owner"), Types.VARCHAR, 3));
-    this.db.executeUpdate(query, params);
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
   @Override
   public void delete() {
-    String query = "delete from newsfeed where id = ?";
-    List<QueryParameter> params = new LinkedList();
-    
-    params.add(QueryParameter.Create(this.get("id"), Types.INTEGER, 1));
-    this.db.executeUpdate(query, params);
-  } 
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
 }

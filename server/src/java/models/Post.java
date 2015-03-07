@@ -9,6 +9,7 @@ import db.QueryParameter;
 import java.sql.Types;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -31,11 +32,12 @@ public class Post extends Model {
 
   @Override
   public void update() {
-    String query = "update posts set deleted = ? where id = ?";
+    String query = "update posts set deleted = ?, enabled = ? where id = ?";
     List<QueryParameter> params = new LinkedList();
     
     params.add(QueryParameter.Create(this.get("deleted"), Types.BIT, 1));
-    params.add(QueryParameter.Create(this.get("id"), Types.INTEGER, 2));
+    params.add(QueryParameter.Create(this.get("enabled"), Types.BIT, 2));
+    params.add(QueryParameter.Create(this.get("id"), Types.INTEGER, 3));
     this.db.executeUpdate(query, params);
   }
 
@@ -52,12 +54,12 @@ public class Post extends Model {
   }
 
   @Override
-  public void delete() {
-    String query = "delete from posts where id = ?";
-    List<QueryParameter> params = new LinkedList();
-    
-    params.add(QueryParameter.Create(this.get("id"), Types.INTEGER, 1));
-    this.db.executeUpdate(query, params);
+  public boolean execute(String action) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
-  
+
+  @Override
+  public void delete() {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
 }

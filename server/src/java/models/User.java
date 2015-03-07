@@ -30,38 +30,7 @@ public class User extends Model {
     this.set(this.db.executeQuery(query, params));
   }
   
-  @Override
-  public void update() {
-    String query = "update users set password = ?, category = ? where id = ?";
-    List<QueryParameter> params = new LinkedList();
-    
-    params.add(QueryParameter.Create(this.get("password"), Types.VARCHAR, 1));
-    params.add(QueryParameter.Create(this.get("category"), Types.VARCHAR, 2));
-    params.add(QueryParameter.Create(this.get("id"), Types.VARCHAR, 3));
-    this.db.executeUpdate(query, params);
-  }
-
-  @Override
-  public void save() {
-    String query = "insert into users values(?,?,?)";
-    List<QueryParameter> params = new LinkedList();
-    
-    params.add(QueryParameter.Create(this.get("id"), Types.VARCHAR, 1));
-    params.add(QueryParameter.Create(this.get("password"), Types.VARCHAR, 2));
-    params.add(QueryParameter.Create(this.get("category"), Types.VARCHAR, 3));
-    this.db.executeUpdate(query, params);
-  }
-
-  @Override
-  public void delete() {
-    String query = "delete from users where id = ?";
-    List<QueryParameter> params = new LinkedList();
-    
-    params.add(QueryParameter.Create(this.get("id"), Types.VARCHAR, 1));
-    this.db.executeUpdate(query, params);
-  }
-  
-  public boolean login() {
+  public boolean execute(String action){
     String query = "select * from users where id = ? and password= ?";
     List<QueryParameter> params = new LinkedList();
     
@@ -70,5 +39,20 @@ public class User extends Model {
     
     List<Map<String, Object>> resultSet = this.db.executeQuery(query, params);
     return resultSet.size() == 1;
+  }
+
+  @Override
+  public void update() {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public void save() {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public void delete() {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 }

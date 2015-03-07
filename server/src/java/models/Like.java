@@ -9,6 +9,7 @@ import db.QueryParameter;
 import java.sql.Types;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -45,11 +46,12 @@ public class Like extends Model {
   }
 
   @Override
+  public boolean execute(String action) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
   public void delete() {
-    String query = "delete from likes where id = ?";
-    List<QueryParameter> params = new LinkedList();
-    
-    params.add(QueryParameter.Create(this.get("id"), Types.INTEGER, 1));
-    this.db.executeUpdate(query, params);
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 }

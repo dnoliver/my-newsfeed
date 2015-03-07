@@ -9,21 +9,20 @@ import db.QueryParameter;
 import java.sql.Types;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
  * @author dnoliver
  */
-public class Comment extends Model {
+public class Share extends Model {
 
-  public Comment(){
-    super(ModelType.COMMENT);
+  public Share(){
+    super(ModelType.SHARE);
   }
   
   @Override
   public void select() {
-    String query = "select * from comments where id = ?";
+    String query = "select * from shares where id = ?";
     List<QueryParameter> params = new LinkedList();
     
     params.add(QueryParameter.Create(this.get("id"), Types.INTEGER, 1));
@@ -32,24 +31,16 @@ public class Comment extends Model {
 
   @Override
   public void update() {
-    String query = "update comments set deleted = ?, enabled = ? where id = ?";
-    List<QueryParameter> params = new LinkedList();
-    
-    params.add(QueryParameter.Create(this.get("deleted"), Types.BIT, 1));
-    params.add(QueryParameter.Create(this.get("enabled"), Types.BIT, 2));
-    params.add(QueryParameter.Create(this.get("id"), Types.INTEGER, 3));
-    this.db.executeUpdate(query, params);
+    throw new UnsupportedOperationException("Cannot update Share");
   }
 
   @Override
   public void save() {
-    String query = "insert into comments(text,owner,post,attachment) values(?,?,?,?)";
+    String query = "insert into shares(post,type) values(?,?)";
     List<QueryParameter> params = new LinkedList();
     
-    params.add(QueryParameter.Create(this.get("text"), Types.VARCHAR, 1));
-    params.add(QueryParameter.Create(this.get("owner"), Types.VARCHAR, 2));
-    params.add(QueryParameter.Create(this.get("post"), Types.INTEGER, 3));
-    params.add(QueryParameter.Create(this.get("attachment"), Types.VARCHAR, 4));
+    params.add(QueryParameter.Create(this.get("post"), Types.VARCHAR, 1));
+    params.add(QueryParameter.Create(this.get("type"), Types.VARCHAR, 2));
     this.db.executeUpdate(query, params);
   }
 
@@ -62,5 +53,4 @@ public class Comment extends Model {
   public void delete() {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
-  
 }

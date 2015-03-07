@@ -10,9 +10,9 @@ package db;
  * @author dnoliver
  */
 public class QueryParameter {
-  private Object object;
-  private int type;
-  private int index;
+  private final Object object;
+  private final int type;
+  private final int index;
   
   public static QueryParameter Create(Object o, int t, int i){
     return new QueryParameter(o,t,i);

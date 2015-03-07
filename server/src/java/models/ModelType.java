@@ -10,5 +10,5 @@ package models;
  * @author dnoliver
  */
 public enum ModelType {
-  SESSION, USER, NEWSFEED, POST, COMMENT, LIKE
+  USER, NEWSFEED, POST, COMMENT, LIKE, SHARE
 }

@@ -14,9 +14,6 @@ public class ModelFactory {
     Model model = null;
     
     switch(type){
-      case SESSION:
-        model = new Session();
-        break;
       case USER:
         model = new User();
         break;
@@ -32,6 +29,9 @@ public class ModelFactory {
       case LIKE:
         model = new Like();
         break;
+      case SHARE: 
+        model = new Share();
+        break;
     }
     return model;
   }
@@ -40,9 +40,6 @@ public class ModelFactory {
     ModelType type = null;
     
     switch(name){
-      case "session":
-        type = ModelType.SESSION;
-        break;
       case "user":
         type = ModelType.USER;
         break;
@@ -58,6 +55,9 @@ public class ModelFactory {
       case "like":
         type = ModelType.LIKE;
         break;
+      case "share":
+        type = ModelType.SHARE;
+        break;  
     }
     
     return type;

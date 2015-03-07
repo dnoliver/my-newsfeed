@@ -25,44 +25,18 @@ import java.util.logging.Logger;
  * @author dnoliver
  */
 public class DataBase {
-  static String dbinstance;
-  static boolean initialized = false;
-  static Map<String,Map<String,String>> procedures;
+  String user;
+  String password;
+  String server;
 
   public DataBase(){
-    DataBase.getDriver();  
+    this.user = "developer";
+    this.password = "intel123!";
+    this.server = "jdbc:sqlserver://DNOLIVER-MOBL;databaseName=newsfeed;";
   }
   
-  private static void getDriver(){
-    try {
-      if(!initialized){
-        initialized = true;
-        
-        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        dbinstance = "jdbc:sqlserver://DNOLIVER-MOBL;" +
-            "databaseName=newsfeed;user=developer;password=intel123!;";
-        procedures = new HashMap();
-        
-        procedures.put("users", new HashMap<String,String>());
-        procedures.get("users").put("newsfeed","{call getUsersForNewsfeed(?)}");
-        procedures.get("users").put("session","{call getUsersForSession(?)}");
-        
-        procedures.put("newsfeeds",new HashMap<String,String>());
-        procedures.get("newsfeeds").put("session","{call getNewsfeedsForSession(?)}");
-        
-        procedures.put("comments",new HashMap<String,String>());
-        procedures.get("comments").put("post","{call getCommentsForPost(?)}");
-        procedures.get("comments").put("feed","{call getCommentsFeed(?)}");
-        
-        procedures.put("likes",new HashMap<String,String>());
-        procedures.get("likes").put("post","{call getLikesForPost(?)}");
-        
-        procedures.put("posts",new HashMap<String,String>());
-        procedures.get("posts").put("newsfeed","{call getPostsForNewsfeed(?)}");
-      }
-    } catch (ClassNotFoundException ex) {
-      Logger.getLogger(DataBase.class.getName()).log(Level.SEVERE, null, ex);
-    }
+  private Connection getConnection() throws SQLException{
+    return DriverManager.getConnection(this.server,this.user,this.password);
   }
   
   private static void getHashMap( List<Map<String, Object>> row, ResultSet rs) 
@@ -83,7 +57,7 @@ public class DataBase {
     PreparedStatement st;
     int result = -1;
     try {
-      connection = DriverManager.getConnection(DataBase.dbinstance);
+      connection = this.getConnection();
       st = connection.prepareStatement(query);
       
       for(QueryParameter p : params){
@@ -106,7 +80,7 @@ public class DataBase {
     List result = new ArrayList();
 
     try {
-      connection = DriverManager.getConnection(DataBase.dbinstance);
+      connection = this.getConnection();
       st = connection.prepareStatement(query);
       
       for(QueryParameter p : params){
@@ -132,7 +106,7 @@ public class DataBase {
     ResultSet rs;
             
     try {
-      connection = DriverManager.getConnection(DataBase.dbinstance);
+      connection = this.getConnection();
       proc = connection.prepareCall(procedure);
       
       for(QueryParameter p : params){
