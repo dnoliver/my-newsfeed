@@ -26,10 +26,11 @@
     <jsp:include page="./templates/Post.jsp" />
     <jsp:include page="./templates/Comment.jsp" />
     <jsp:include page="./templates/ModalShare.jsp" />
-    <jsp:include page="./templates/ModalControls.jsp" />
+    <jsp:include page="./templates/ModalRanking.jsp" />
     <jsp:include page="./templates/Tabs.jsp" />
-    <jsp:include page="./templates/PostForm.jsp" />
     <script>
+    MODEL = app.Application.Model.getInstance();  
+      
     $(document).ready(function(){
       APP = app.Application.Controller.getInstance();
       APP.setElement($("#ApplicationUiRegion"));

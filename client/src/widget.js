@@ -15,43 +15,6 @@ app.Widget.Modal = app.View.Template.extend({
   }
 });
 
-app.Widget.Controls = app.Widget.Modal.extend({
-  selector: "#ModalControlsTemplate",
-  initialize: function(){
-    app.Widget.Modal.prototype.initialize.apply(this);
-    this.model = null;
-  },
-  
-  actions: {
-    cancel: function(event){
-      this.modal('hide');
-    },
-    enable: function(event){
-      this.model.set('enabled',true);
-      this.model.save();
-      this.modal('hide');
-    },
-    disable: function(event){
-      this.model.set('enabled',false);
-      this.model.save();
-      this.modal('hide');
-    },
-    delete: function(event){
-      this.model.set('deleted',true);
-      this.model.save();
-      this.modal('hide');
-    }
-  },
-  
-  control: function(options){
-    this.model = options.model;
-    this.selectors.delete.toggle(options.delete || false);
-    this.selectors.disable.toggle(options.disable || false);
-    this.selectors.enable.toggle(options.enable || false);
-    this.modal();
-  }
-});
-
 app.Widget.Share = app.Widget.Modal.extend({
   selector: "#ModalShareTemplate",
   
@@ -71,6 +34,9 @@ app.Widget.Share = app.Widget.Modal.extend({
         description: target.model.get('text'),
         message: ''
       });
+      
+      // here must create a share whit post id = target.model.id and type = 'facebook'
+      target.model.share(/*type*/'facebook');
     }
   },
   
@@ -86,6 +52,82 @@ app.Widget.Share = app.Widget.Modal.extend({
     window.twttr.widgets.load();
     this.modal();
   }
+});
+
+app.Widget.Ranking = app.Widget.Modal.extend({
+  selector: "#ModalRankingTemplate",
+  
+  initialize: function(){
+    app.Widget.Modal.prototype.initialize.apply(this);
+  },
+  
+  update: function(){
+    var app_model = app.Application.Model.getInstance();
+    this.selectors.table.empty(); // empty the table
+    
+    this.listenToOnce(app_model.ranking,'sync',function(){
+      var ranking = app_model.ranking;
+      var self = this;
+      ranking.toJSON().forEach(function(row){
+        self.selectors.table.append(
+          '<tr>' +
+          '<td>'+ row.ts +'</td>' +
+          '<td>'+ row.owner +'</td>' +
+          '<td>'+ row.comments +'</td>' +
+          '<td>'+ row.facebook_shares + '</td>' +
+          '<td>'+ row.tweeter_shares +'</td>' +
+          '<td><a data-action="showText" data-text="'+ row.text +'">Text</a></td>' +
+          '</tr>'
+        );
+      });
+    });
+    
+    this.listenToOnce(app_model.ranking,'error',function(){
+      alert('error in query');
+    });
+    //here set the url
+    var query = {};
+    var params = {};
+    params.career = this.selectors.career.val();
+    params.subject = this.selectors.subject.val();
+    params.from = this.selectors.from.val();
+    params.to = this.selectors.to.val();
+    
+    this.selectors.career.val('');
+    this.selectors.subject.val('');
+    this.selectors.from.val('');
+    this.selectors.to.val('');
+    
+    query.user = app_model.user.id;
+    if(params.career.length !== 0){
+      query.career = params.career;
+    }
+    
+    if(params.subject.length !== 0){
+      query.subject = params.subject;
+    }
+    
+    if(params.from.length !== 0){
+      query.from = params.from;
+    }
+    
+    if(params.to.length !== 0){
+      query.to = params.to;
+    }
+ 
+    app_model.ranking.url =  app.Config.QUERY.RANKING + $.param(query);
+    app_model.ranking.fetch();
+  },
+  
+  actions: {
+    showText: function(event){
+      alert(event.target.dataset.text);
+    },
+    update: function(event){
+      this.update();
+    }
+  }
+  
 });
 
 app.Widget.Tabs = app.View.Template.extend({

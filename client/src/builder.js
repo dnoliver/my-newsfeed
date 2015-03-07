@@ -5,7 +5,7 @@ app.Builder.Create = function Create(Class,x){
 };
 
 app.Builder.Creators = {
-  link: _.template('<a href="<%= content %>"><%= content %></a>'),
+  link: _.template('<a href="<%= content %>" target="_blank"><%= content %></a>'),
   image: _.template('<img src="<%= content %>" alt="not available" class="img-rounded img-responsive">'),
   youtube: _.template('<iframe src="http://www.youtube.com/embed/<%= content %>?html5=1" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'),
   vimeo: _.template('<iframe src="//player.vimeo.com/video/<%= content %>" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>')

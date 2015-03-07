@@ -15,22 +15,21 @@
       <ul class="nav navbar-nav">
         <li><a data-selector="UserUiRegion"></a></li>
         <li><a data-action="update">update</a></li>
+        <li><a data-action="logout">logout</a></li>
+        <li><a data-action="ranking">ranking</a></li>
       </ul>
-      <form class="navbar-form navbar-left" method="POST" action="/ubp/command/logout">
-        <button type="submit" class="btn btn-default">Logout</button>
-      </form>
     </div>
   </div>
 </nav>
 <div data-selector="ShareWidgetUiRegion"></div>
-<div data-selector="ControlsWidgetUiRegion"></div>
+<div data-selector="RankingWidgetUiRegion"></div>
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-9" data-selector="TabUiRegion"></div>
     <div class="col-md-3">
       <div class="panel panel-primary">
         <div class="panel-heading">Latest Activity</div>
-        <div class="panel-body" data-selector="FeedUiRegion"></div>
+        <ul class="list-group" data-selector="FeedUiRegion" style="overflow-wrap:break-word;"></ul>
       </div>
     </div>
   </div>

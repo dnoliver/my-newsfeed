@@ -6,10 +6,16 @@ app.Config = {
     NEWSFEED: '/ubp/model/newsfeed',
     POST: '/ubp/model/post',
     LIKE: '/ubp/model/like',
+    SHARE: '/ubp/model/share',
     COMMENT: '/ubp/model/comment',
-    USER: '/ubp/model/user',
-    SESSION: '/ubp/model/session'
+    USER: '/ubp/account'
   },
-  QUERY_URL: '/ubp/query/',
-  COLLECTION_URL: '/ubp/collection'
+  QUERY: {
+    NEWSFEED: '/ubp/query/newsfeed?',
+    POST: '/ubp/query/post?',
+    LIKE: '/ubp/query/like?',
+    COMMENT: '/ubp/query/comment?',
+    FEED: '/ubp/query/feed?size=5',
+    RANKING: '/ubp/query/ranking?'
+  }
 };
